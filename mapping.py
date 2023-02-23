@@ -1,7 +1,5 @@
 from collections import defaultdict
 
-in_dict1 = {"a": 1, "b": 2, "c": 3, "d": "9"}
-in_dict2 = {"a": 1, "b": 7, "e": 4, "f": 3, "k": 8, "l": 13}
 
 def reverse_non_unique_mapping(d):
     dinv = {}
@@ -42,10 +40,12 @@ def recon(dict1, dict2) -> dict:
     result['exclusive_a'] = exclusive
     exclusive = [(k, v) for k, v in dict2.items()]
     result['exclusive_b'] = exclusive
-
     return result
 
 
-result = recon(dict1=in_dict1, dict2=in_dict2)
-for x in result.keys():
-    print(x, ':', result[x])
+if __name__ == "__main__":
+    in_dict1 = {"a": 1, "b": 2, "c": 3, "d": "9"}
+    in_dict2 = {"a": 1, "b": 7, "e": 4, "f": 3, "k": 8, "l": 13}
+    result = recon(dict1=in_dict1, dict2=in_dict2)
+    for x in result.keys():
+        print(x, ':', result[x])
