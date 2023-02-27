@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 
-def reverse_non_unique_mapping(d):
+def reverse_non_unique_mapping(d: dict[str, str]) -> dict[str, list[str]]:
     dinv = {}
     for k, v in d.items():
         if v in dinv:
@@ -10,8 +10,9 @@ def reverse_non_unique_mapping(d):
             dinv[v] = [k]
     return dinv
 
+
 def recon(dict1, dict2) -> dict:
-    result = defaultdict(list)
+    result = defaultdict()
     common_keys = set(dict1.keys()) & set(dict2.keys())
     for key in common_keys:
         if dict1[key] == dict2[key]:
