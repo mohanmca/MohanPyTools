@@ -1,8 +1,8 @@
 import sqlite3
-import urllib.request
-from urllib.request import urlopen, Request
+
 import csv
 import contextlib
+from tools import download_and_save
 
 '''Ref: https://www.digitalocean.com/community/tutorials/how-to-use-the-sqlite3-module-in-python-3'''
 
@@ -10,15 +10,12 @@ urls = [r"https://people.sc.fsu.edu/~jburkardt/data/csv/oscar_age_male.csv",
         r"https://www.cmegroup.com/trading/interest-rates/files/mac-coupons-cusips-2023-09.csv",
         'https://people.sc.fsu.edu/~jburkardt/data/csv/addresses.csv']
 
-req = Request(urls[0])
-req.add_header('User-Agent', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:82.0) Gecko/20100101 Firefox/82.0')
-fileName = r"oscar_age_male.csv"
+fileName = urls[0].split("/")[-1]
+table_name = fileName.replace(".", "_")
+download_and_save(urls[0], fileName)
 
-req = urllib.request.Request(urls[0], method='GET')
-with urllib.request.urlopen(req) as r:
-    with open(fileName, 'wb') as fout:
-        fout.write(r.read())
 print("downloaded!")
+
 result = []
 with open(fileName, newline='') as csvfile:
     reader = csv.DictReader(csvfile, quotechar='"', delimiter=',', quoting=csv.QUOTE_ALL, skipinitialspace=True)
@@ -27,12 +24,8 @@ with open(fileName, newline='') as csvfile:
 
 columns = list(sorted(result[0].keys()))
 
-col_def = ""
-for i, column in enumerate(columns):
-    col_def = col_def + column + " TEXT, "
-
-col_def = col_def[:-2:]
-table_name = fileName.replace(".", "_")
+col_def = " TEXT, ".join(columns) + " TEXT"
+col_def = col_def.replace("Index", "_Index")
 
 table_def = f"CREATE TABLE  IF NOT EXISTS {table_name} ( {col_def} )"
 print(table_def)
@@ -53,6 +46,7 @@ for record in result:
 # print(sqls)
 
 with contextlib.closing(connection.cursor()) as cursor:  # auto-closes
+    cursor.execute(table_def)
     for sql in sqls:
         cursor.execute(sql)
     connection.commit()
