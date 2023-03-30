@@ -28,6 +28,12 @@ class FrenchDeck:
 
 
 d = FrenchDeck()
-len(d)
+print(f"Size the this deck is - %d" % len(d))
 for c in d:
-     print(c)
+    print(c)
+Card
+c = Card("7", "Diamonds")
+print(f"Does  this deck has %s, - %s" % (c, c in d))
+from random import choice
+
+print(f"Random card chosen - %s" % choice(d))
